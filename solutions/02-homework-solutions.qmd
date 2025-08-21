@@ -1,0 +1,479 @@
+---
+title: "Section 2 Homework Solutions"
+format: 
+  html:
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+  fig-height: 3
+---
+
+
+__Exercise 1__.
+
+```{r}
+library(tidyverse)
+library(here)
+stat113_df <- read_csv(here("data_private/stat113_survey.csv"))
+
+ggplot(data = stat113_df, aes(x = Exercise)) + 
+  geom_histogram(colour = "darkorange4", fill = "darkorange1", bins = 15) +
+  theme_minimal() +
+  labs(x = "Exercise (hours per week)")
+```
+
+a. right-skewed.
+
+<!-- (or approximately symmetric would also get credit). -->
+
+```{r}
+sum_stats <- stat113_df |> pull(Exercise) |> summary() |>
+  round(2)
+```
+
+b. approximately `r sum_stats["Median"]` hours.
+
+c. approximately `r sum_stats["3rd Qu."] - sum_stats["1st Qu."]` hours.
+
+d. approximately `r round(sd(stat113_df$Exercise, na.rm = TRUE), 2)` hours.
+
+e. We would expect the mean to be slightly larger than the median if we said the distribution in (a) was right-skewed.
+
+f. We would use the mean to describe the center and the standard deviation to describe the spread if we say there is no extreme skewness or outliers in the distribution of `Exercise`. (Or, we would use the median to describe the center and the IQR to describe the spread if we argue that the distribution is extremely skewed).
+
+<br>
+
+__Exercise 2__.
+
+```{r}
+ggplot(data = stat113_df, aes(x = Travel)) + 
+  geom_histogram(colour = "darkslategray4", fill = "darkslategray1", bins = 15) +
+  theme_minimal() +
+  labs(x = "Travel Time to SLU (hours)")
+```
+
+a. right-skewed.
+
+b. We would use the median to describe the center and the IQR to describe the spread of the distribution of `Travel` time because there is extreme right-skewness in the distribution of `Travel`.
+
+c. The pollutant amounts for the the general vehicles should have a larger standard deviation because, if sampling a bunch of different vehicle types (trucks, sedans, etc.), the amount of pollution generated should be __more__ spread out/variable than the pollutants generated from a sampling of 50 of the same car model.
+
+<br>
+
+__Exercise 3__. 
+
+```{r}
+ggplot(data = stat113_df, aes(x = GPA)) + 
+  geom_histogram(colour = "aquamarine4", fill = "aquamarine1", bins = 15) +
+  theme_minimal() 
+
+sum_stats_gpa <- stat113_df |> pull(GPA) |> summary() |>
+  round(2)
+```
+
+a. left-skewed
+
+b. approximately `r sum_stats_gpa["Median"]` points.
+
+c. approximately `r sum_stats_gpa["3rd Qu."] - sum_stats_gpa["1st Qu."]` points.
+
+d. approximately `r round(sd(stat113_df$GPA, na.rm = TRUE), 2)` points.
+
+e. We would expect the mean GPA to be less than the median GPA because the distribution is left-skewed.
+
+f. Can either say (1) we would use the mean to describe center and standard deviation to describe spread because, though there is some left-skewness in GPA, it is not extreme OR (2) we would use the median to describe center and IQR to describe spread because the distribution of GPA is extremely skewed.
+
+g. Answers will vary but below is one example:
+
+```{r}
+fake_survey <- stat113_df |>
+  mutate(fake_GPA = if_else(GPA <= 3.5,
+                            GPA - 0.75,
+                            false = GPA - 0.25))
+ggplot(data = fake_survey, aes(x = fake_GPA)) +
+  geom_histogram(colour = "black", fill = "white", bins = 15) +
+  theme_minimal()
+```
+
+<br>
+
+__Exercise 4__.
+
+```{r}
+gpa_vals <- c(1.0, 2.4, 2.5, 2.6, rep(3.0, 4), rep(3.2, 4), rep(3.4, 1), rep(3.6, 4),
+  rep(3.75, 4), 4.0)
+summary_gpa <- gpa_vals |> summary()
+IQR <- summary_gpa["3rd Qu."] - summary_gpa["1st Qu."]
+```
+
+Lower Fence: `r summary_gpa["1st Qu."]` - `r 1.5 * IQR` = `r summary_gpa["1st Qu."] - 1.5 * IQR`.
+
+Upper Fence: `r summary_gpa["3rd Qu."]` + `r 1.5 * IQR` = `r summary_gpa["3rd Qu."] + 1.5 * IQR`
+
+Any value below the lower fence or above the upper fence should be considered an outlier in the boxplot. The lower whisker should extend to the smallest GPA value that is __not__ an outlier (2.4 in this case).
+
+```{r}
+gpa_df <- tibble::tibble(gpa_vals = gpa_vals)
+ggplot(gpa_df, aes(y = gpa_vals)) +
+  geom_boxplot(outlier.shape = 8, fill = "hotpink1", colour = "hotpink4") +
+  ylab( "GPA") + xlab("") +
+    scale_x_continuous(limits = c(-0.59, 0.59), labels = NULL) +
+  theme(axis.ticks.x = element_blank()) +
+  theme_minimal()
+```
+
+<br>
+
+__Exercise 5__.
+
+```{r, fig.height = 3, results = "hide"}
+ggplot(data = stat113_df |> filter(!is.na(Sport) &
+                                          !is.na(Hgt) & Sport != ""),
+       aes(x = Sport, y = Hgt)) +
+  geom_boxplot(outlier.shape = 8, fill = "hotpink1", colour = "hotpink4") +
+  labs(y = "Height (inches)") +
+  theme_minimal()
+med_df <- stat113_df |> filter(!is.na(Sport)) |> group_by(Sport) |>
+  summarise(med_height = median(Hgt, na.rm = TRUE))
+```
+
+a. Students who do not play a sport: `r med_df |> filter(Sport == "No") |> pull(med_height)` inches.
+
+Students who do play a sport `r med_df |> filter(Sport == "Yes") |> pull(med_height)` inches.
+
+b. Yes, height and sport do seem associated because the median height for students who do not play a sport is substantially different than the median height for students who do play a sport and there is not a ton of overlap in the distributions of height between the two groups.
+
+<!-- OR  No, height and sport do not seem associated because the median heights for students who do and do not play sport are fairly similar and there is a lot of overlap in the distributions of height between the two groups. -->
+
+<br>
+
+__Exercise 6__. 
+
+```{r, fig.height=3, results="hide"}
+ggplot(data = stat113_df |> filter(!is.na(GPA) & !is.na(Award)),
+       aes(x = Award, y = GPA)) +
+  geom_boxplot(outlier.shape = 8, colour = "mediumpurple4", fill = "mediumpurple1") +
+  labs(y = "GPA (points)") +
+  theme_minimal()
+```
+
+a. Either (1) Yes, GPA and award do seem associated because the median gpas for students for each of the award types are similar there is not a ton of overlap in the distributions of height between the three groups OR 
+
+(2) No, GPA and award do not seem associated because the median gpas for students for each of the three award types are fairly similar and there is a lot of overlap in the distributions of gpa between the three groups.
+
+I would lean very slightly toward (1) for this example but either would receive full credit.
+
+b. Plot that shows __more__ association:
+
+```{r}
+set.seed(4141231)
+gpa_more_association <- c(rnorm(20, 2.0, 0.2),
+                          rnorm(20, 2.5, 0.3),
+                          rnorm(20, 3.5, 0.2))
+gpa_less_association <- c(rnorm(60, 3.2, 0.4))
+award <- c(rep("Academy", 20), rep("Nobel", 20), rep("Olympic", 20))
+gpa_fake_association <- tibble::tibble(gpa_more_association, gpa_less_association, award)
+ggplot(data = gpa_fake_association,
+       aes(x = award, y = gpa_more_association)) +
+  geom_boxplot(outlier.shape = 8, colour = "mediumpurple4", fill = "mediumpurple1") +
+  theme_minimal()
+```
+
+Plot that shows __less__ association:
+
+```{r}
+ggplot(data = gpa_fake_association,
+       aes(x = award, y = gpa_less_association)) +
+  geom_boxplot(outlier.shape = 8, colour = "mediumpurple4", fill = "mediumpurple1") +
+  theme_minimal()
+```
+
+<br>
+
+__Exercise 7__. 
+
+a. Paired (observations are paired by the specific employee since we are taking two measurements, one before and one after, of each employee).
+
+b. Not Paired (each employee only has one measurement: there is no logical way to "pair" one employee from the mindfulness program group with an employee who did not participate).
+
+c. Not Paired (there is no logical way to pair one house from Canton with a particular house from Potsdam).
+
+d. Paired (observations are paired by athlete since we are taking two measurements from each athlete).
+
+<br>
+
+__Exercise 8__. 
+
+a. These data are paired because we are measuring assessment 1 and assessment 2 for each student in the class so that it makes logical sense to "pair" each student's assessments with each other.
+
+b. 
+
+```{r}
+set.seed(5125141)
+assessment1 <- rpois(50, 57)
+assessment2 <- rpois(50, 67)
+assessment_df <- tibble(assessment1, assessment2) |>
+  mutate(assessment1 = if_else(assessment1 > 75, 75, assessment1),
+         assessment2 = if_else(assessment2 > 75, 75, assessment2),
+         difference = assessment2 - assessment1)
+
+ggplot(data = assessment_df, aes(x = difference)) +
+  geom_histogram(colour = "darkred", fill = "red", bins = 15) +
+  theme_minimal()
+```
+
+There does look like there is a difference, on average, between mean scores on the two assessments. In particular, it looks like students scored higher on the second assessment, on average, as most of the differences are larger than 0. Therefore, assessment 1 seems to be the more challenging assessment.
+
+c. Any histogram centered around 0 would show no evidence of a difference in average scores on the two assessments:
+
+```{r}
+assessment_df <- assessment_df |> mutate(fake_difference = difference - mean(difference))
+ggplot(data = assessment_df, aes(x = fake_difference)) +
+  geom_histogram(colour = "darkred", fill = "red", bins = 10) +
+  theme_minimal()
+```
+
+<br>
+
+__Exercise 9__.
+
+```{r}
+set.seed(41541231)
+x <- 1:100
+beta_a <- -1
+beta_b <- 0.04
+beta_c <- -0.15
+beta_d <- 1
+y_a <- beta_a * x + rnorm(100, 0, 1.5)
+y_b <- beta_b * x + rnorm(100, 0, 6)
+y_c <- beta_c * x + rnorm(100, 0, 8)
+y_d <- beta_d * x + rnorm(100, 0, 5)
+scatter_df <- tibble::tibble(x = x, y_a, y_b, y_c, y_d)
+
+```
+
+a. Correlation coefficient of about -0.97.
+
+```{r}
+ggplot(data = scatter_df, aes(x = x, y = y_a)) +
+  geom_point() +
+  theme_minimal()
+```
+
+b. Correlation coefficient equal to about 0.04.
+
+```{r}
+ggplot(data = scatter_df, aes(x = x, y = y_b)) +
+  geom_point() +
+  theme_minimal()
+```
+
+c. Relationship between `y` and `x` __negative__, __weak__, and __linear__.
+
+```{r}
+ggplot(data = scatter_df, aes(x = x, y = y_c)) +
+  geom_point() +
+  theme_minimal()
+```
+
+d. Relationship between `y` and `x` __positive__, __strong__, and __linear__.
+
+```{r}
+ggplot(data = scatter_df, aes(x = x, y = y_d)) +
+  geom_point() +
+  theme_minimal()
+```
+
+<br>
+
+__Exercise 10__.
+
+```{r}
+library(openintro)
+ggplot(data = satgpa, aes(x = sat_m, fy_gpa)) +
+  geom_point(colour = "lightslateblue") +
+  theme_minimal()
+## with(satgpa, cor(sat_m, fy_gpa)) |> round(2)
+```
+
+a. The relationship is __linear__, __weak__ (or moderate), and __positive__.
+
+b. About `0.3`.
+
+```{r}
+library(openintro)
+ggplot(data = satgpa, aes(x = hs_gpa, fy_gpa)) +
+  geom_point(colour = "lightslateblue") +
+  theme_minimal()
+```
+
+c. The relationship is __linear__, __weak__ (or moderate), and __positive__.
+
+<br>
+
+__Exercise 11__. 
+
+```{r, fig.height=3}
+stat113_nomiss <- stat113_df |>
+  filter(!is.na(Sport) & !is.na(Award) & Sport != "" & Award != "")
+pander::pander(table(stat113_nomiss$Sport, stat113_nomiss$Award))
+```
+
+```{r}
+stat113_sport_sum <- stat113_nomiss |> group_by(Sport, Award) |>
+  summarise(n = n()) |>
+  ungroup() |> 
+  group_by(Sport) |>
+  mutate(prop = n / sum(n)) |>
+  mutate(prop = round(prop, 3)) |>
+  ungroup()
+```
+
+a. Of those that do not play a sport, what proportion would want to win an Olympic Medal? `r stat113_sport_sum |> filter(Sport == "No" & Award == "Olympic Gold") |> pull(prop)`
+
+Of those that do not play a sport, what proportion would want to win an Academy Award? `r stat113_sport_sum |> filter(Sport == "No" & Award == "Academy Award") |> pull(prop)`
+
+Of those that do not play a sport, what proportion would want to win a Nobel Prize? `r stat113_sport_sum |> filter(Sport == "No" & Award == "Nobel Prize") |> pull(prop)`
+
+b. Of those that play a sport, what proportion would want to win an Olympic Medal? Of those that do not play a sport, what proportion would want to win an Olympic Medal? `r stat113_sport_sum |> filter(Sport == "Yes" & Award == "Olympic Gold") |> pull(prop)`
+
+Of those that play a sport, what proportion would want to win an Academy Award? `r stat113_sport_sum |> filter(Sport == "Yes" & Award == "Academy Award") |> pull(prop)`
+
+Of those that play a sport, what proportion would want to win a Nobel Prize? `r stat113_sport_sum |> filter(Sport == "Yes" & Award == "Nobel Prize") |> pull(prop)`
+
+c. Row proportions.
+
+A stacked bar chart of the proportions that were calculated is given below.
+
+```{r, fig.height=2, results="hide"}
+ggplot(data = stat113_nomiss, aes(x = Sport, fill = Award)) +
+  geom_bar(position = "fill") +
+  scale_fill_viridis_d() +
+  theme_minimal() +
+  labs(y = "proportion")
+```
+
+d. Yes, it looks like the variables are associated because the proportion of students who play a sport that responded they would prefer the Olympic medal is much higher than the proportion of students who do not play a sport that responded they would prefer the Olympic medal. We can see this in the bar plot because the distribution of `No` sport students is substantially different than the distirbution of `Yes` sport students.
+
+e. Can make either argument for this question but I would argue "Yes", you can make this extension because the relationship between whether or not a student plays a sport and their award preference is probably similar for students who choose not to take STAT 113. So, though we have a convenience sample, the association we are attempting to measure should be similar for students not taking STAT 113.
+
+<br>
+
+__Exercise 12__.
+
+```{r, echo=FALSE, message=FALSE}
+library(openintro)
+## load the data set
+data(military) 
+pander::pander(with(military, 
+  table(branch, gender)))
+```
+
+```{r}
+prop_table <- table(military$branch, military$gender) |> prop.table(margin = 1) |> round(3)
+```
+
+a. Of the sampled people in the air force, what proportion are female? `r prop_table[1, 1]`
+
+Of the sampled people in the army, what proportion are female? `r prop_table[2, 1]`
+
+Of the sampled people in the marine corps, what proportion are female? `r prop_table[3, 1]`
+
+Of the sampled people in the navy, what proportion are female? `r prop_table[4, 1]`
+
+```{r}
+ggplot(data = military, aes(x = branch, fill = gender)) +
+  geom_bar(position = "fill") +
+  scale_fill_viridis_d() +
+  theme_minimal() +
+  labs(y = "proportion")
+```
+
+b. Can either say (1) yes, they do seem associated because the proportion of female members in some branches (like the air force and navy) is much higher than the proportion of female service members in other branches (like the marine corps). The bar plot shows the differing proportions of female service members within each branch OR
+
+(2) no, they do not seem associated because the proportion of female members is approximately the same in each branch. We see this in the stacked bar plot, as the distribution of `gender` is roughly the same for each `branch`.
+
+I would lean toward (1) for this example.
+
+c. Answers will vary but here is one example:
+
+```{r}
+fake_military <- military |> mutate(fake_gender = case_when(branch == "army" & gender == "male" ~ "female",
+                                           branch == "army" & gender == "female" ~ "male", TRUE ~ as.character(gender)))
+
+ggplot(data = fake_military, aes(x = branch, fill = fake_gender)) +
+  geom_bar(position = "fill") +
+  scale_fill_viridis_d() +
+  theme_minimal() +
+  labs(y = "proportion")
+```
+
+<br>
+
+__Exercise 13__.
+
+```{r}
+mlb_df <- mlb_players_18 |> mutate(newposition = case_when(
+  position == "OF" ~ "Outfield",
+  position == "SS" ~ "Infield",
+  position == "3B" ~ "Infield",
+  position == "P" ~ "Pitcher",
+  position == "C" ~ "Catcher",
+  TRUE ~ "Infield"
+)) |>
+  filter(AB >= 100) |>
+  select(name, team, position, AB,
+    R, H, RBI, OBP, SLG, AVG, HR, newposition) |>
+  filter(position %in% c("1B", "2B", "3B", "SS")) |>
+  mutate(homerun_cat = if_else(HR > 10, true = "more than 10",
+                                false = "10 or less"))
+table(mlb_df$position, mlb_df$homerun_cat) |> pander::pander()
+```
+
+a. `position`: 4 levels and whether or not the player hit `more than 10 homeruns`: 2 levels.
+
+b. 41 / 51 = 80.4%: row percent.
+
+c. 23 / 56 = 41.1%: row percent.
+
+Below is a stacked bar plot of the data.
+
+```{r}
+ggplot(data = mlb_df, aes(x = position, fill = homerun_cat)) +
+  geom_bar() +
+  scale_fill_viridis_d() +
+  theme_minimal()
+```
+
+d. Yes, the variables do seem like they are associated. A higher proportion of the first base `1B` players hit more than 10 homeruns compared to the other three positions so the distribution for `1B` players looks substantially different than the distributions of the other three players.
+
+e. Answers can vary but below is one example of a stacked bar plot that shows __less__ of an association than our observed data.
+
+```{r}
+set.seed(13121)
+mlb_fake <- mlb_df |> group_by(position) |>
+  mutate(fake_hr = sample(c("10 or less", "more than 10"), size = n(), replace = TRUE, prob = c(0.25, 0.75)))
+ggplot(data = mlb_fake, aes(x = position, fill = fake_hr)) +
+  geom_bar() +
+  scale_fill_viridis_d() +
+  theme_minimal()
+```
+
+<br>
+
+__Exercise 14__. 
+
+a. Histogram or Boxplot.
+
+b. Scatterplot.
+
+c. Side-by-side Boxplot.
+
+d. Barplot.
+
+e. Stacked Barplot.
+
+f. Side-by-side Boxplot.
+
+<br>

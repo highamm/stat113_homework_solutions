@@ -1,0 +1,45 @@
+---
+title: "Section 1 Homework Solutions"
+format: 
+  html:
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+  fig-height: 3
+---
+
+__Exercise 1__.
+
+a. Answers will vary.
+
+b. A single-sided sheet of handwritten notes/examples (as well as a calculator).
+
+c. The to-do list (or checklist) file.
+
+d. The folder on the table outside of Professor Higham's office (Bewkes 123).
+
+e. Answers will vary.
+
+f. Answers will vary.
+
+<br>
+
+__Exercise 2__.
+
+a. quantitative
+
+b. categorical with 4 levels: first-year, sophomore, junior, senior.
+
+c. quantitative
+
+d. quantitative
+
+e. categorical with 2 levels: have a twitter and do not have a twitter.
+
+<br>
+
+
+__Exercise 3__. If you have questions about anything in the podcast that you listened to, please ask!
+
+<br>

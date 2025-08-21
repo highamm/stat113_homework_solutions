@@ -1,0 +1,316 @@
+---
+title: "Section 4 Homework Solutions"
+format: 
+  html:
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+  fig-height: 3
+---
+
+__Exercise 1__. Answers will vary.
+
+<br>
+
+__Exercise 2__.
+
+```{r}
+library(tidyverse)
+set.seed(4151412)
+satgpa <- openintro::satgpa |> mutate(sex = if_else(sex == 1,
+                                         true = "male",
+                                         false = "female"))
+sat_train <- satgpa |> slice_sample(n = 800)
+sat_test <- anti_join(satgpa, sat_train)
+
+mod_small <- lm(fy_gpa ~ sat_v + hs_gpa + sex, data = sat_train)
+pander::pander(mod_small)
+```
+
+a. Write the fitted regression equation with the three predictors.
+
+$$
+\hat{Y} = -0.3927 + 0.0199 sat_v + 0.6021 hs_{gpa} + -0.0785 sex_{ind}
+$$
+```{r}
+pred_vec <- predict(mod_small, satgpa)
+```
+
+b. `r satgpa |> slice(1) |> pull(fy_gpa) |> round(4) - pred_vec[1] |> round(4)` points.
+
+c. `r satgpa |> slice(2) |> pull(fy_gpa) |> round(4) - pred_vec[2] |> round(4)` points.
+
+d. `r satgpa |> slice(3) |> pull(fy_gpa) |> round(4) - pred_vec[3] |> round(4)` points.
+
+e. `r (satgpa |> slice(1:3) |> pull(fy_gpa) - pred_vec[1:3]) |> abs() |> mean() |> round(4)`
+
+```{r}
+resids <- sat_test$fy_gpa - predict(mod_small, sat_test)
+mae_small <- round(mean(abs(resids)), 4)
+```
+
+f. The average error in predicting first year GPA for a model with SAT verbal, High school GPA, and sex as predictors is `r mae_small` points.
+
+```{r}
+mod_large <- lm(fy_gpa ~ sat_v + sat_m + hs_gpa + sex, data = sat_train)
+resids <- sat_test$fy_gpa - predict(mod_large, sat_test)
+mae_large <- round(mean(abs(resids)), 4)
+```
+
+g. The model without math SAT score because the mean absolute error is slightly lower.
+
+h. Answers here will vary but if you use the analysis to argue __against__ the math SAT, you would probably mention the lower mean absolute error in predicting first-year GPA at the college without math SAT in the model. If you use the analysis to argue __for__ the math SAT, you might question whether a model with math SAT but without verbal SAT might be better (and that therefore, verbal SAT should be the one that is dropped first).
+
+
+```{r}
+set.seed(415131)
+mu1 <- sample(c(220, 230, 240), size = 1)
+mu2 <- sample(c(250, 260, 270), size = 1)
+sigma1 <- sample(c(15, 20, 25), size = 1)
+sigma2 <- sample(c(30, 40), size = 1)
+```
+
+__Exercise 3__. 
+
+a. 
+
+```{r, echo=FALSE, fig.height = 2.5}
+library(ggplot2)
+library(tidyverse)
+ggplot(data = data.frame(x = c(mu1 - 3 * sigma1, mu1 + 3 * sigma1)),
+  aes(x = x)) +
+  stat_function(fun = dnorm, n = 101,
+    args = list(mean = mu1, sd = sigma1)) +
+  ylab("") + xlab("") +
+  scale_y_continuous(breaks = NULL) + 
+  scale_x_continuous(breaks = c(mu1 - 3 * sigma1, 
+                                mu1 - 2 * sigma1,
+                                mu1 - sigma1,
+                                mu1,
+                                mu1 + sigma1, 
+                                mu1 + 2 * sigma1,
+                                mu1 + 3 * sigma1)) +
+  theme_minimal() +
+  geom_vline(aes(xintercept = 225))
+```
+
+```{r}
+Z_a <- (225 - mu1) / sigma1
+```
+
+b. Z = `r Z_a |> round(2)`
+
+c. Our time to finish the race is `r Z_a |> round(2) |> abs()` standard deviations below the mean race time.
+
+```{r}
+pz_a <- pnorm(Z_a)
+```
+
+d. `r pz_a |> round(4)`
+
+e. 
+
+```{r, echo=FALSE, fig.height = 2.5}
+library(ggplot2)
+library(tidyverse)
+ggplot(data = data.frame(x = c(mu2 - 3 * sigma2, mu2 + 3 * sigma2)),
+  aes(x = x)) +
+  stat_function(fun = dnorm, n = 101,
+    args = list(mean = mu2, sd = sigma2)) +
+  ylab("") + xlab("") +
+  scale_y_continuous(breaks = NULL) + 
+  scale_x_continuous(breaks = c(mu2 - 3 * sigma2, 
+                                mu2 - 2 * sigma2,
+                                mu2 - sigma2,
+                                mu2,
+                                mu2 + sigma2, 
+                                mu2 + 2 * sigma2,
+                                mu2 + 3 * sigma2)) +
+  theme_minimal() +
+  geom_vline(aes(xintercept = 240))
+```
+
+```{r}
+Z_b <- (240 - mu2) / sigma2
+```
+
+f. Z = `r Z_b |> round(2)`
+
+g. Race B's time was more "unusual" because the time is more standard deviations away from the mean time. (Or, Race B's time was more unusual because the z-score for this race was further from 0).
+
+<br>
+
+__Exercise 4__. 
+
+```{r}
+Z_1 <- (175 - 150) / 25
+Z_2 <- (110 - 150) / 25
+```
+
+a. 
+
+Friend A: `r Z_1 |> round(2)`
+
+Friend B: `r Z_2 |> round(2)`
+
+b. Friend B scored `r Z_2 |> round(2) |> abs()` standard deviations below the mean test score.
+
+c. Friend B had the more unusual score because their Z-score was further from 0 (or, Friend B had the more unusual score because their test score was more standard deviations away from the mean).
+
+
+```{r}
+p_z1 <- 1 - pnorm(Z_1)
+p_z2 <- pnorm(Z_2)
+```
+
+d. `r p_z1 |> round(4)`
+
+e. `r p_z2 |> round(4)`
+
+f. Z-scores would be useful to compare scores amongst the three friends because the two tests might be measured on various different scales. Z-scores allow us to assess how each friend did, relative to everyone else who took their particular test.
+
+<br>
+
+__Exercise 5__.
+
+a. Obtain a list of all faculty members and randomly select a certain number (perhaps 50) of them to survey.
+
+b. Ask the faculty members that you know or are familiar with to complete the survey.
+
+c. Send an email to all faculty, asking them to respond to the survey.
+
+d. Force all faculty members to fill out your survey. This is probably not possible, as some faculty members might refuse or might be hard to track down.
+
+<br>
+
+__Exercise 6__.
+
+Perhaps only the faculty members who have very strong feelings about diversity and its role in education will respond to the survey while faculty members who do not feel as strongly about the topic would not take the time to respond.
+
+<br>
+
+__Exercise 7__.
+
+The gardener could lay the 50 pots out in her gardening area, and randomly select 25 of the pots to use the new fertilizer. The other 25 pots would get the old fertilizer. She would then wait an appropriate amount of time and measure the growth on the tomato plants.
+
+<br>
+
+__Exercise 8__.
+
+Answers will vary but one possible confounding variable is the amount of sunlight each plant receives. This variable would be confounding if, for example, (1) the northern half receives more sun so that sunlight is associated with the type of fertilizer (so sunlight is associated with the explanatory variable) AND (2) amount of sunlight is also associated with plant growth (so sunlight is associated with the response).
+
+<br>
+
+__Exercise 9__.
+
+Answers will vary. If you have any questions about the article, please ask!
+
+__Exercise 10__. 
+
+a. Sampling variability means that, for different samples of 20 trees, the proportion that are taller than 40 feet will change from one sample of 20 trees to another sample of 20 trees to another sample, etc.
+
+b. The sampling distribution of the sample proportion would result from repeatedly sampling 20 trees in St. Lawrence County millions of times. For each sample of 20 trees, the proportion that are taller than 40 feet ($\hat{p}$) is computed. Plotting these millions of sample proportions forms the sampling distribution of the sample proportion.
+
+c. Approximately $0.2913$ for the mean and approximately $0.1026$ for the standard deviation.
+
+```{r}
+se <- sqrt(0.29 * (1 - 0.29) / 20)
+```
+
+d. `r se |> round(4)`. The calculation is close to what is given on the app.
+
+e. 
+
+No, according to our success-failure condition, the sampling distribution will be normally distributed if both $n \cdot p$ and $n \cdot (1 - p)$ are larger than 10. In this case, $n \cdot p$ is ``r 0.29 * 20` so the condition does not hold.
+
+f. The spread will be smaller. The more trees there are in repeated samples, the less variability the sample proportions will have. This can also be seen in the formula for the standard deviation of the sampling distribution, which has an $n$ in the denomenator (so a larger $n$ results in a smaller spread).
+
+```{r}
+ci <- (0.3 + c(-1, 1) * 1.96 * sqrt(0.29 * (1 - 0.29) / 50)) |>
+  round(4)
+```
+
+g. (`r ci[1]`, `r ci[2]`).
+
+h. We are 95% confident that the proportion of trees in St. Lawrence County that are taller than 40 feet is between `r ci[1]` and `r ci[2]`.
+
+i. Because we already have a census and know the true proportion of trees taller than 40 feet exactly ($p = 0.29$)>. Therefore, we don't need an interval for it.
+
+<br>
+
+__Exercise 11__. Suppose that you are interested in estimating the proportion of toddlers in the U.S. who are allergic to peanuts. You randomly select 150 toddlers and record whether each one has a peanut allergy. Assume that your sample is representative of all toddlers in the U.S.
+
+You find in your sample that 20 out of the 150 toddlers have a peanut allergy.
+
+a. Sampling variability means that, different samples of 150 toddlers can yield different sample proportions that have a peanut allergy.
+
+b. The shape of the sampling distribution is approximately normal because $n \cdot \hat{p} = 20 > 10$  and $n \cdot (1 - \hat{p}) = 130 > 10$.
+
+```{r}
+p_hat <- 20 / 150
+ci_toddler <- (p_hat + c(-1, 1) * 2.576 * sqrt(p_hat * (1 - p_hat) / 150)) |> round(4)
+```
+
+c. (`r ci_toddler[1]`, `r ci_toddler[2]`).
+
+d. We are 99% confident that the proportion of all toddlers with a peanut allergy in the United States is between `r ci_toddler[1]` and `r ci_toddler[2]`.
+
+e. 95% confidence means that, if we were to repeatedy take samples of 150 toddlers millions of times, record a sample proportion $\hat{p}$ for each sample, and build a 95% confidence interval for each sample, then about 95% of these intervals would contain 0.15, the true proportion of toddlers with a peanut allergy. 5% of the intervals would not contain 0.15.
+
+f. 
+
+(1): FALSE. Margin of Error will increase for the 99% confidence interval because, in order to be "more" confident, we need to pay a price for that extra confidence by widening the interval.
+
+(2): FALSE. There is no guarantee that 99% of all confidence intervals will contain some random sample proportion.
+
+(3): TRUE. 99% of all 99% confidence intervals should contain the population proportion.
+
+<br>
+
+__Exercise 12__. 
+
+a. approximately $0.0283$.
+
+b. `r sqrt(0.12 * (1 - 0.12) / 130) |> round(4)` is approximately equal to the standard deviation found with the app.
+
+c. approximately $0.056$.
+
+d. `r (1.96 * sqrt(0.12 * (1 - 0.12) / 130)) |> round(4)` is approximately equal to the Margin of Error found with the app.
+
+<br>
+
+```{r}
+library(tidyverse)
+library(here)
+survey_df <- read_csv(here("data_private/stat113_survey.csv"))
+
+survey_hand <- survey_df |> filter(Hand == "Right" | Hand == "Left") 
+survey_sum <- survey_hand |>
+  summarise(totalright = sum(Hand == "Right"),
+                          total = n())
+```
+
+__Exercise 13__. Suppose we are interested in the proportion of students that are right-handed at SLU. We take a convenience sample of STAT 113 students, finding that, of the `r survey_sum$total` surveyed, `r survey_sum$totalright` are right-handed.
+
+a. All students at SLU.
+
+b. $p =$ the proportion of all SLU students who are right-handed.
+
+c. Can make this argument either way. I would argue it probably is representative because, though it is a convenience sample, students who choose not to take STAT 113 probably have similar handedness characteristics as students who choose to take STAT 113. 
+
+d. $\hat{p} =$ `r (survey_sum$totalright / survey_sum$total) |> round(3)`.
+
+e. Check to see if $n \cdot \hat{p}$ is greater than 10 and $n \cdot (1 - \hat{p})$ is greater than 10. If either `r (survey_sum$total * (survey_sum$totalright / survey_sum$total)) |> round(3)` or  `r (survey_sum$total * (1 - survey_sum$totalright / survey_sum$total)) |> round(3)` is less than 10, then the assumption does not hold.
+
+```{r}
+p_hat <- survey_sum$totalright / survey_sum$total
+ci_hand <- (p_hat + c(-1, 1) * 2.576 * sqrt(p_hat * (1 - p_hat) / survey_sum$total)) |> round(4)
+```
+
+f. (`r ci_hand[1]`, `r ci_hand[2]`).
+
+g. We are 99% confident that the proportion of students at SLU who are right-handed is between `r ci_hand[1]` and `r ci_hand[2]`.
+
+<br>
+

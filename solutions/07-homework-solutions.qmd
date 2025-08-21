@@ -1,0 +1,469 @@
+---
+title: "Section 7 Homework Solutions"
+format: 
+  html:
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+  fig-height: 3
+---
+
+__Exercise 1__. 
+
+```{r}
+library(tidyverse); library(here)
+golf_df <- read_csv(here("data/pga_data_final.csv"))
+golf2018 <- golf_df |> filter(year == 2018) |>
+  arrange(ranking)
+```
+
+```{r}
+ggplot(data = golf2018, aes(x = driving_accuracy, y = driving_distance)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_minimal() +
+  labs(y = "driving distance (yards)", x = "percent fairways hit")
+```
+
+```{r}
+lm(driving_distance ~ driving_accuracy, data = golf2018) |>
+  pander::pander()
+```
+
+a. $H_0: \beta_1 = 0$. There is no association between driving distance and driving accuracy of professional male golfers.
+
+$H_a: \beta_1 \neq 0$. There is an association between driving distance and driving accuracy of professional male golfers.
+
+b. $\hat{Y} = 336.9 + -0.6554 X$, 
+
+where $\hat{Y}$ is predicted driving distance and $X$ is driving accuracy.
+
+c. $df = 191$
+
+```{r}
+## qt(0.05, 191)
+```
+
+$t^* = 1.6529$
+
+d. 
+
+$-0.6554 \pm 1.6529 \cdot 0.1104 = (-0.8379, -0.4729)$. 
+
+e. 
+
+$T = \frac{-0.6554 - 0}{0.1104} = -5.939$, which matches the T-statistic given in the output.
+
+f. $1.335 * 10^{-8}$ or $0.00000001335$.
+
+g. We are 90% confident that, for a one percent increase in driving accuracy, driving distance decreases between 0.4729 yards and 0.8379 yards, on average.
+
+h. There is __strong__ evidence that driving distance and driving accuracy are associated ($T = -5.939$, p-value $< 0.0001$).
+
+<br>
+
+__Exercise 2__. 
+
+```{r, echo = FALSE, results = "show", fig.height = 3}
+library(tidyverse)
+both_df <- read_csv(here::here("data/sakai_visits.csv"))
+
+ggplot(data = both_df, aes(x = Total, y = Current_Grade)) +
+  geom_point(colour = "seagreen3") +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Number of Visits", y = "Current Grade") +
+  ylim(c(25, 103)) +
+  theme_minimal()
+```
+
+```{r, results = "as.is"}
+library(pander)
+mod <- lm(Current_Grade ~ Total, data = both_df)
+pander(mod)
+```
+
+a. The relationship between grade and number of Sakai visits is moderate (or weak), positive, and does show some evidence of non-linearity.
+
+b. $H_0: \beta_1 = 0$
+
+$H_a: \beta_1 \neq 0$.
+
+c. Theoretical: $Y = \beta_0 + \beta_1 Visits + Error$.
+
+Fitted: $\hat{Y} = 58.31 + 0.1614 Visits$,
+
+where $\hat{Y}$ is the predicted current grade.
+
+d. $df = 52$, $t^* = 1.6747$
+
+e. 
+
+$0.1614 \pm 1.6747 \cdot 0.03652 = (0.10024, 0.2226)$.
+
+f. p-value = $0.00005072$
+
+g. We are 90% confident that, for a one visit increase in the visits to Sakai, course grade is expected to increase between 0.10024 points and 0.22256 points, on average.
+
+h. There is __strong__ evidence that course grade and number of visits to Sakai are associated ($T = 4.418$, p-value $= 0.00005072$)
+
+<br>
+
+__Exercise 3__. 
+
+```{r}
+library(tidyverse); library(lubridate)
+song_df <- read_csv(here::here("data/spotify_songs.csv")) |> select(track_album_release_date,
+                                         track_name, track_artist,
+                                         playlist_genre, valence,
+                                         energy) %>%
+  mutate(date = ymd(track_album_release_date),
+         year = year(date)) %>%
+  filter(year >= 2019) %>%
+  filter(playlist_genre == "pop" | playlist_genre == "rock")
+```
+
+```{r, echo = FALSE}
+library(pander)
+pander(lm(valence ~ playlist_genre, data = song_df))
+```
+
+```{r, echo = FALSE}
+ggplot(data = song_df, aes(x = playlist_genre, y = valence)) +
+  geom_boxplot(colour = "sienna4", fill = "sienna1") +
+  xlab("Genre (0 = Pop, 1 = Rock)") +
+  theme_minimal() +
+  labs(y = "valence (song positivity, in points)")
+```
+
+a. 
+
+$$
+genre_{ind} = \begin{cases}
+0, \text{ song is pop}, \\
+1, \text{ song is rock}
+\end{cases}
+$$
+
+
+b. $\hat{Y} = 0.4829 - 0.03965 \text{genre}_{ind}$
+
+c. 0.4829 points.
+
+d. 0.44325 points.
+
+e. 
+
+__Prepare__: 
+
+$H_0: \beta_1 = 0$,
+
+$H_a: \beta_1 \neq 0$.
+
+
+__Calculate__: $df = 2164$, $T = -4.13$, p-value = $0.00003766$.
+
+__Conclude__: We estimate that the average valence for pop songs is 0.03965 points higher than the average valence for rock songs. There is __strong__ evidence that the average valence for all pop songs is different than the average valence for all rock songs (or, there is strong evidence that song genre and valence are associated). ($T = -4.13$, p-value = $0.00003766$).
+
+f. Find a 95% confidence interval for the difference in mean valence scores between rock songs and pop songs.
+
+__Prepare__: Point estimate: $-0.03965$ and this is for (rock minus pop).
+
+$SE = 0.009601$
+
+__Calculate__: $df = 2164$, $t^* = 1.9611$, 
+
+confidence interval: $-0.03965 \pm 1.9611 \cdot 0.009601 = (-0.058479, -0.02082)$.
+
+__Conclude__: We are 95% confident that the mean valence for all pop songs is between 0.02082 points and 0.058479 points higher than the mean valence for all rock songs.
+
+<br>
+
+__Exercise 4__. 
+
+```{r}
+stroop_df <- read_csv("https://raw.githubusercontent.com/highamm/stat113/main/data_server/stroop.csv")
+ggplot(data = stroop_df, aes(x = test, y = time)) +
+  geom_boxplot(colour = "thistle4", fill = "thistle1") +
+  theme_minimal() 
+```
+
+```{r}
+stroop_mod <- lm(time ~ test, data = stroop_df) 
+stroop_aug <- broom::tidy(stroop_mod)
+```
+
+a. $\hat{Y}$ = `r stroop_aug |> slice(1) |> pull(estimate) |> round(3)` + `r stroop_aug |> slice(2) |> pull(estimate) |> round(3)` test_{ind},
+
+where $\hat{Y}$ is the predicted time to complete the test.
+
+b. 
+
+__Prepare__:
+
+$H_0: \beta_1 = 0$
+
+$H_a: \beta_1 \neq 0$.
+
+__Prepare__: 
+
+`r stroop_aug |> slice(2) |> pull(estimate) |> round(3)` seconds.
+
+__Calculate__:
+
+$T$ = `r stroop_aug |> slice(2) |> pull(statistic) |> round(3)`
+
+p-value = `r stroop_aug |> slice(2) |> pull(p.value) |> round(7)`
+
+```{r}
+test_output <- stroop_aug |> slice(2) 
+if (test_output$p.value > 0.1) {
+  adj <- "no"
+} else if (test_output$p.value > 0.05) {
+  adj <- "marginal"
+} else if (test_output$p.value > 0.01) {
+  adj <- "moderate"
+} else {
+  adj <- "strong"
+}
+```
+
+__Conclude__: There is `r adj` evidence for an association between the test taken and the time taken to complete the test (or, there is `r adj` evidence that the mean time for the control test group is different than the mean time for the stroop test group). ($T$ = `r stroop_aug |> slice(2) |> pull(statistic) |> round(3)`, p-value = `r stroop_aug |> slice(2) |> pull(p.value) |> round(7)`)
+
+c. Find a 90% confidence interval for the slope parameter, which represents a difference in means for this example.
+
+__Prepare__: 
+
+Point Estimate: `r stroop_aug |> slice(2) |> pull(estimate) |> round(3)` seconds. This is for (stroop minus control) difference in time to complete the test.
+
+SE = `r stroop_aug |> slice(2) |> pull(std.error) |> round(3)`
+
+__Calculate__:
+
+$df$ = `r nrow(stroop_df) - 2`
+
+$t^*$ = `r (qt(0.95,  nrow(stroop_df) - 2)) |> round(3)`
+
+__Calculate__: 
+
+```{r}
+ci <- (stroop_aug |> slice(2) |> pull(estimate) |> round(3)) + c(-1, 1) *
+  (qt(0.95,  nrow(stroop_df) - 2)) *
+  (stroop_aug |> slice(2) |> pull(std.error) |> round(3)) 
+```
+
+(`r ci[1] |> round(3)`, `r ci[2] |> round(3)`).
+
+__Conclude__: We are 90% confident that the average time to complete the test for the stroop test group is between `r ci[1] |> round(3)` seconds and `r ci[2] |> round(3)` seconds more than the average time to complete the test for the control group.
+
+<br>
+
+__Exercise 5__.
+
+```{r}
+survey_df <- read_csv(here::here("data_private/stat113_survey.csv")) |>
+  filter(!is.na(Award) & !is.na(GPA))
+
+ggplot(data = survey_df, aes(x = Award, y = GPA)) +
+  geom_boxplot(outlier.shape = 8, colour = "turquoise4", fill = "turquoise1") +
+  theme_minimal()
+```
+
+```{r}
+survey_df |> group_by(Award) |>
+  summarise(GPA_mean = mean(GPA, na.rm = TRUE), ## get means by position
+            sample_size = n()) |> ## get sample size by position
+  pander::pander() ## make table pretty
+```
+
+<br>
+
+```{r}
+mod <- aov(GPA ~ Award, data = survey_df)
+pander::pander(anova(mod))
+```
+
+a. $H_0: \mu_{academy} = \mu_{nobel} = \mu_{olympic}$
+
+$H_a:$ at least one of the mean GPAs is different OR there is an association between `award` preference and `gpa`.
+
+```{r}
+ol_gpa <- survey_df |> group_by(Award) |>
+  summarise(GPA_mean = mean(GPA, na.rm = TRUE), ## get means by position
+            sample_size = n()) |>
+  filter(Award == "Olympic Gold") |>
+  pull(GPA_mean) |> round(3)
+```
+
+b. 
+
+$\hat{\mu}_{olympic}$ = `r ol_gpa`
+
+```{r}
+p_val <- anova(mod)$`Pr(>F)`[1] |> round(4)
+```
+
+c. 
+
+`r p_val`
+
+```{r}
+if (p_val > 0.1) {
+  adj <- "no"
+} else if (p_val > 0.05) {
+  adj <- "marginal"
+} else if (p_val > 0.01) {
+  adj <- "moderate"
+} else {
+  adj <- "strong"
+}
+```
+
+d. There is `r adj` evidence for an association between award preference and GPA among students (or, there is `r adj` evidence that any of the mean GPAs differ for any of the award preferences) (p-value = `r p_val`).
+
+<br>
+
+e. $H_0: \mu_{OG} = \mu_{NP}$
+
+$H_a: \mu_{OG} \neq \mu_{NP}$.
+
+```{r}
+#| echo: false
+#| output: false
+tukey_out <- TukeyHSD(mod)$Award
+tukey_out |> knitr::kable()
+diff <- tukey_out[3, 1] |> round(3)
+lower <- tukey_out[3, 2] |> round(3)
+upper <- tukey_out[3, 3] |> round(3)
+p_val <- tukey_out[3, 4] |> round(4)
+```
+
+f. We estimate that the mean GPA of students who prefer a Gold Medal is `r abs(diff)` points less than the mean GPA of students who prefer a Nobel Prize.
+
+g. We are 95% confidence that the mean GPA of students who prefer a Gold Medal is between `r abs(lower)` points less than and `r upper` points more than the mean GPA of students who prefer a Nobel Prize.
+
+```{r}
+if (p_val > 0.1) {
+  adj <- "no"
+} else if (p_val > 0.05) {
+  adj <- "marginal"
+} else if (p_val > 0.01) {
+  adj <- "moderate"
+} else {
+  adj <- "strong"
+}
+```
+
+h. There is `r adj` evidence that the mean GPA of all students who prefer a Gold Medal is different than the mean GPA of all students who prefer a Nobel Prize (p-value = `r p_val`).
+
+__Exercise 6__. 
+
+```{r}
+mod <- lm(Current_Grade ~ Total, data = both_df)
+sakai_aug <- broom::augment(mod)
+ggplot(data = both_df, aes(x = Total, y = Current_Grade)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Number of Visits", y = "Current Grade") +
+  ylim(c(25, 103)) +
+  theme_minimal()
+ggplot(data = sakai_aug, aes(x = Total, y = .resid)) +
+  geom_point() +
+  theme_minimal()
+ggplot(data = sakai_aug, aes(x = .resid)) +
+  geom_histogram(colour = "thistle4", fill = "thistle1", bins = 19) +
+  theme_minimal()
+```
+
+__linearity__: There is some evidence of non-linearity in the graph so this assumption may be violated:
+
+```{r}
+ggplot(data = both_df, aes(x = Total, y = Current_Grade)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  labs(x = "Number of Visits", y = "Current Grade") +
+  ylim(c(25, 103)) +
+  theme_minimal()
+```
+
+__constant variance__: There is also some evidence of non-constant variance in the residuals vs. Total visits plot (there is a lot more variability in the residuals for low values of number of visits and a bit less variability for larger values of number of visits). Therefore, this assumption may also be violated.
+
+__normality__: Though the histogram of the residuals is left-skewed, our sample size is fairly large and the skewness is not extreme. Therefore, this assumption appears to be okay.
+
+b.
+
+```{r}
+noise_mod <- lm(time ~ test, data = stroop_df)
+noise_aug <- broom::augment(noise_mod)
+
+ggplot(data = noise_aug, aes(x = test, y = .resid)) +
+  geom_boxplot(colour = "seagreen4", fill = "seagreen1", outlier.shape = 8) +
+  theme_minimal()
+ggplot(data = noise_aug, aes(x = .resid)) +
+  geom_histogram(colour = "seagreen4", fill = "seagreen1", bins = 20) +
+  theme_minimal()
+```
+
+__constant variance__: The boxplots have spreads that are not too different from one another so this assumptions holds.
+
+__normality__: Though the histogram of the residuals is right-skewed, our sample size is fairly large and the skewness is not extreme. Therefore, this assumption appears to be okay.
+
+c. 
+
+```{r}
+gpa_mod <- lm(GPA ~ Award, data = survey_df)
+gpa_aug <- broom::augment(gpa_mod)
+
+ggplot(data = gpa_aug, aes(x = Award, y = .resid)) +
+  geom_boxplot(outlier.shape = 8, colour = "skyblue4", fill = "skyblue1") +
+  theme_minimal()
+ggplot(data = gpa_aug, aes(x = .resid)) +
+  geom_histogram(colour = "skyblue4", fill = "skyblue1", bins = 20) +
+  theme_minimal()
+```
+
+__constant variance__: All three boxplots have spreads that are not too different from one another so this assumptions holds.
+
+__normality__: Though the histogram of the residuals is a little left-skewed, our sample size is fairly large and the skewness is not extreme. Therefore, this assumption appears to be okay.
+
+<br>
+
+__Exercise 7__. Use the following choices to determine which procedure and graph you would use to answer a few questions of interest.
+
+1. Confidence interval or hypothesis test for a proportion (bar plot)
+    
+2. Chi-square goodness of fit test (bar plot)
+    
+3. Chi-square test of association (stacked bar plot)
+
+4. Confidence interval or hypothesis test for a mean (histogram or boxplot) or for a difference in means from paired data (histogram or line plot).
+
+5. Confidence interval or hypothesis test for a slope in a regression model with a quantitative predictor (scatterplot) 
+
+6. Confidence interval or hypothesis test for a difference in means in a regression model with a categorical predictor with two levels (side-by-side boxplots)
+
+7. ANOVA hypothesis test for association for a categorical predictor with more than two levels and a quantitative response (side-by-side boxplots)
+
+Recall some of the variables collected in the STAT 113 survey data. Variables include: `GPA`, `Exercise` (hours per week), `Award` (olympic, nobel, or academy), `Class` year (First-year, Sophomore, Junior, or Senior), `Travel` (number of hours to get to SLU), `Height` (in inches), `Computer` (Mac or PC), `Twitter` (has twitter or does not), and `Pulse` (beats per minute).
+
+Which procedure would you use to answer the following questions?
+
+a. Chi-squared Test of Association.
+
+b. ANOVA hypothesis test for association for a categorical predictor with more than two levels and a quantitative response.
+
+c. Confidence interval or hypothesis test for a slope in a regression model with a quantitative predictor.
+
+d. Confidence interval or hypothesis test for a mean.
+
+e. Confidence interval or hypothesis test for a proportion.
+
+f. Chi-squared goodness of fit test.
+
+g. Confidence interval or hypothesis test for a slope in a regression model with a quantitative predictor.
+
+<br>
+
+__Exercise 8__. The answers to your the reflection prompts will vary but you should receive full credit if you answer each question and you do so in 2-3 sentences for each question.
+
+<br>

@@ -1,0 +1,334 @@
+---
+title: "Section 5 Homework Solutions"
+format: 
+  html:
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+  fig-height: 3
+---
+
+__Exercise 1__.
+
+a. Our variable of interest is whether or not the home team won the game. It is categorical with 2 categories.
+
+b. $p$, the proportion of all NFL games during a Pandemic where the home team wins.
+
+c. $H_0: p = 0.5$
+
+$H_a: p \neq 0.5$
+
+d. $\hat{p}$ = 0.5079, $n$ = 63
+
+e. $n \cdot p_0 =  63 \cdot 0.5 = 31.5 > 10$
+
+$n \cdot (1 - p_0) =  63 \cdot (1 - 0.5) = 31.5 > 10$
+
+The success-failure condition holds so the sampling distribution of the sample proportion will be approximately normal if the null hypothesis is true.
+
+f. $SE = \sqrt{\frac{0.5(1 - 0.5)}{63}}$ = 0.063
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+mu2 <- 0.5; sigma2 <- 0.063
+
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dnorm,
+            args = list(mean = mu2, sd = sigma2), fill = "lightblue4",
+            xlim = c(mu2 - 3 * sigma2, 0.4932)) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey90",
+            xlim = c(0.4932, 0.5079),
+            args = list(mean = mu2, sd = sigma2)) +
+  geom_area(stat = "function", fun = dnorm, fill = "lightblue4",
+            xlim = c(0.5079, mu2 + 3 * sigma2),
+            args = list(mean = mu2, sd = sigma2)) +
+  labs(x = "Sampling Distribution of Sample Proportion if Null is True", y = "") +
+  geom_vline(aes(xintercept = 0.5079)) +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = c(mu2 - 3 * sigma2, 
+                                mu2 - 2 * sigma2,
+                                mu2 - sigma2,
+                                mu2,
+                                mu2 + sigma2, 
+                                mu2 + 2 * sigma2,
+                                mu2 + 3 * sigma2)) +
+  theme_minimal() +
+  labs(caption = "Dark Area is Shaded")
+```
+
+
+g. 
+
+$Z = \frac{\hat{p} - p_0}{SE}$ = 0.125.
+
+```{r}
+mu2 <- 0; sigma2 <- 1; X <- 0.125
+
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dnorm,
+            args = list(mean = mu2, sd = sigma2), fill = "lightblue4",
+            xlim = c(mu2 - 3 * sigma2, -abs(X))) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey90",
+            xlim = c(-abs(X), abs(X)),
+            args = list(mean = mu2, sd = sigma2)) +
+  geom_area(stat = "function", fun = dnorm, fill = "lightblue4",
+            xlim = c(abs(X), mu2 + 3 * sigma2),
+            args = list(mean = mu2, sd = sigma2)) +
+  labs(x = "Z Distribution if Null is True", y = "") +
+  geom_vline(aes(xintercept = X)) +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = c(mu2 - 3 * sigma2, 
+                                mu2 - 2 * sigma2,
+                                mu2 - sigma2,
+                                mu2,
+                                mu2 + sigma2, 
+                                mu2 + 2 * sigma2,
+                                mu2 + 3 * sigma2)) +
+  theme_minimal() +
+  labs(caption = "Dark Area is Shaded")
+```
+
+h. approximately `r (pnorm(-0.125) * 2) |> round(4)`
+
+i. We estimate that the proportion of home teams who won in the NFL during the pandemic is 0.5079. There is __no__ evidence that the proportion of home team wins during a pandemic in the NFL is different than 0.5 (Z = 0.125, p-value = 0.9005).
+
+j. A type I error would mean that we conclude that there is evidence of a home field advantage (or disadvantage), when, in reality there is no home field advantage (or disadvantage).
+
+k. A type II error would mean that we conclude that there is no evidence for a home field advantage (or disadvantage), when, in reality there is a home field advantage (or disadvantage).
+
+l. No. 0.5 is in the interval so it is a "reasonable" or "plausible" value for the proportion of games the home team wins.
+
+<br>
+
+__Exercise 2__. 
+
+a. $H_0: p = \frac{1}{7}$
+
+$H_a: p \neq \frac{1}{7}$
+
+b. $n \cdot p_0 =  50 \cdot \frac{1}{7} = 7.14 < 10$
+
+$n \cdot (1 - p_0) =  50 \cdot (1 - \frac{1}{7}) = 42.86 > 10$
+
+so the condition does not hold and the sampling distribution of the sample proportion may not be approximately normally distributed. However, as prompted in the question, we will complete the rest of the test as if the sampling distribution is normally distributed.
+
+c. $\hat{p}$ = 0.2, $n = 50$, $SE = 0.0495$. 
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+mu2 <- (1 / 7) |> round(3); sigma2 <- 0.0495; X <- 0.2
+
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dnorm,
+            args = list(mean = mu2, sd = sigma2), fill = "lightblue4",
+            xlim = c(mu2 - 3 * sigma2, 0.086)) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey90",
+            xlim = c(0.086, 0.2),
+            args = list(mean = mu2, sd = sigma2)) +
+  geom_area(stat = "function", fun = dnorm, fill = "lightblue4",
+            xlim = c(0.2, mu2 + 3 * sigma2),
+            args = list(mean = mu2, sd = sigma2)) +
+  labs(x = "Sampling Distribution of Sample Proportion if Null is True", y = "") +
+  geom_vline(aes(xintercept = 0.2)) +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = c(mu2 - 3 * sigma2, 
+                                mu2 - 2 * sigma2,
+                                mu2 - sigma2,
+                                mu2,
+                                mu2 + sigma2, 
+                                mu2 + 2 * sigma2,
+                                mu2 + 3 * sigma2)) +
+  theme_minimal() +
+  labs(caption = "Dark Area is Shaded")
+```
+
+d. $Z = -1.154$
+
+e. `r (pnorm(-1.154) * 2) |> round(4)`
+
+f. We estimate that the proportion of people who get the number question in the game correct is 0.2. There is no evidence that the proportion is different than $\frac{1}{7}$ (and therefore no evidence that people have psychic ability from this study). (Z = -1.154, p-value - 0.2485).
+
+g. A Type I error would mean that we conclude that people do have psychic ability but, in reality, people do not have psychic ability and are randomly guessing the number in the game.
+
+h. A Type I error is the referees concluding that the call on the field is incorrect, when, in fact, the call on the field was correct. A Type II Error is the referees not finding enough evidence to overturn the call on the field, when, in fact, the call on the field was not correct.
+
+<br>
+
+__Exercise 3__. 
+
+a. $H_0: p_b = p_c = p_s = \frac{1}{3}$
+
+$H_a:$ at least one of the proportions is different than $\frac{1}{3}$.
+
+b. $400 \cdot \frac{1}{3}$ = 133.3 > 5, so the condition holds.
+
+c. $400 \cdot \frac{1}{3}$ = 133.3 for bulbasaur, 133.3 for charmander, and 133.3 for squirtle
+
+d. $3 - 1 = 2$.
+
+```{r}
+counts <- c(113, 157, 130)
+## chisq.test(counts, correct = FALSE)
+```
+
+e. $X^2 = 7.385$.
+
+f. 
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dchisq,
+            args = list(df = 2), fill = "lightblue4",
+            xlim = c(7.385, 14)) +
+    geom_area(stat = "function", fun = dchisq, fill = "grey90",
+            xlim = c(0, 7.385),
+            args = list(df = 2)) +
+  labs(x = "Sampling Distribution of X^2 Statistic if Null is True", y = "") +
+  geom_vline(aes(xintercept = 7.385)) +
+  scale_y_continuous(breaks = NULL) +
+  theme_minimal() +
+  labs(caption = "Darker Area is Shaded")
+```
+
+g. p-value = 0.02491
+
+h. There is __moderate__ evidence for a preference for at least one of the three starter pokemon ($X^2 = 7.385$, p-value = $0.02491$).
+
+i. We find some evidence for a preference primarily because the number of people who chose Bulbasaur (113) is much less than we would have expected under no preference (133.3) while the number of people who chose Charmander (157) is much more than we would have expected under no preference (133.3).
+
+<br>
+
+__Exercise 4__. 
+
+```{r}
+library(tidyverse)
+library(pander)
+survey_df <- read_csv(here::here("data_private/stat113_survey.csv"))
+new_df <- survey_df |>
+  filter(Hand == "Right" | Hand == "Left") |>
+  filter(Sport == "Yes" | Sport == "No")
+pander(with(new_df, table(Hand, Sport)))
+```
+
+```{r}
+ggplot(data = new_df, aes(x = Hand, fill = Sport)) +
+  geom_bar() +
+  scale_fill_viridis_d() +
+  theme_minimal()
+```
+
+a. $H_0:$ There is no association between handedness and whether or not a student plays a Sport at SLU.
+
+$H_0:$ There is an association between handedness and whether or not a student plays a Sport at SLU.
+
+b. A table of expected counts is:
+
+```{r}
+test_output <- chisq.test(new_df$Hand, new_df$Sport, correct = FALSE)
+pander::pander(test_output$expected)
+```
+
+If all of these counts are larger than, the assumption is satisfied. If any of them are less than 5, the assumption is not satisfied.
+
+c. $X^2$ = `r test_output$statistic |> round(3)`
+
+d. $df = 1$
+
+e. 
+
+```{r}
+chisq_stat <- test_output$statistic |> round(3)
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dchisq,
+            args = list(df = 1), fill = "lightblue4",
+            xlim = c(chisq_stat, 10)) +
+    geom_area(stat = "function", fun = dchisq, fill = "grey90",
+            xlim = c(0, chisq_stat ),
+            args = list(df = 1)) +
+  labs(x = "Sampling Distribution of X^2 Statistic if Null is True", y = "") +
+  geom_vline(aes(xintercept = chisq_stat )) +
+  scale_y_continuous(breaks = NULL) +
+  theme_minimal() +
+  labs(caption = "Darker Area is Shaded")
+```
+
+f. `r test_output$p.value |> round(4)`
+
+```{r}
+if (test_output$p.value > 0.1) {
+  adj <- "no"
+} else if (test_output$p.value > 0.05) {
+  adj <- "marginal"
+} else if (test_output$p.value > 0.01) {
+  adj <- "moderate"
+} else {
+  adj <- "strong"
+}
+```
+
+g. There is `r adj` evidence that handedness and whether or not a student plays a sport are associated ($X^2$ = `r test_output$statistic |> round(3)`, p-value = `r test_output$p.value |> round(4)`)
+
+<br>
+
+__Exercise 5__. 
+
+```{r}
+library(pander)
+raw_data <- matrix(c(3, 2, 3, 10, 3, 0, 6, 3), byrow = TRUE, nrow = 4)
+tab <- as.table(raw_data)
+colnames(tab) <- c("Items", "No Items")
+pander(tab)
+```
+
+a. There are two variables of interest: winning player (4 levels) and whether or not the match had items (2 levels).
+
+b. $H_0:$ There is no association between winning player and whether or not there were items in the match.
+
+$H_a:$ There is an association between winning player and whether or not there were items in the match.
+
+```{r}
+chisq_test_out <- chisq.test(raw_data, correct = FALSE)
+```
+
+c. The following is a table of expected counts with __Player__ on the row and whether or not there were __Items__ on the columns. Because at least one expected count is less than 5, the conditions for the test are not satisfied. We will complete the rest of the test for practice anyway.
+
+```{r}
+chisq_test_out$expected |> pander::pander()
+```
+
+d. The table is given in the previous part.
+
+e. $df = 3$
+
+f. 
+
+```{r}
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dchisq,
+            args = list(df = 3), fill = "lightblue4",
+            xlim = c(7.9692 , 14)) +
+    geom_area(stat = "function", fun = dchisq, fill = "grey90",
+            xlim = c(0, 7.9692 ),
+            args = list(df = 3)) +
+  labs(x = "Sampling Distribution of X^2 Statistic if Null is True", y = "") +
+  geom_vline(aes(xintercept = 7.9692 )) +
+  scale_y_continuous(breaks = NULL) +
+  theme_minimal() +
+  labs(caption = "Darker Area is Shaded")
+```
+
+g. p-value = 0.04665.
+
+h.There is moderate evidence that winning player and whether or not the match was played with items are associated ($X^2 = 7.9692$, p-value = $0.04665$).
+
+i. We are seeing moderate evidence for the association because some of the observed counts are very different than the counts you would expect to see if there is no association. For example, Player __B__ wins much more often without items (10 times) than you would expect with no association (6.5 times).
+
+<br>
+
+__Exercise 6__. Solutions to the exam corrections assignment will vary.

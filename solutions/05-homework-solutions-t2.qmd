@@ -1,0 +1,160 @@
+---
+title: "Section 5 Homework Solutions"
+format: 
+  html:
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+  fig-height: 3
+---
+
+__Exercise 1__.
+
+a. Our variable of interest is whether or not the home team won the game. It is categorical with 2 categories.
+
+b. $p$, the proportion of all NFL games during a Pandemic where the home team wins.
+
+c. $H_0: p = 0.5$
+
+$H_a: p \neq 0.5$
+
+d. $\hat{p}$ = 0.5079, $n$ = 63
+
+e. $n \cdot p_0 =  63 \cdot 0.5 = 31.5 > 10$
+
+$n \cdot (1 - p_0) =  63 \cdot (1 - 0.5) = 31.5 > 10$
+
+The success-failure condition holds so the sampling distribution of the sample proportion will be approximately normal if the null hypothesis is true.
+
+f. $SE = \sqrt{\frac{0.5(1 - 0.5)}{63}}$ = 0.063
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+mu2 <- 0.5; sigma2 <- 0.063
+
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dnorm,
+            args = list(mean = mu2, sd = sigma2), fill = "lightblue4",
+            xlim = c(mu2 - 3 * sigma2, 0.4932)) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey90",
+            xlim = c(0.4932, 0.5079),
+            args = list(mean = mu2, sd = sigma2)) +
+  geom_area(stat = "function", fun = dnorm, fill = "lightblue4",
+            xlim = c(0.5079, mu2 + 3 * sigma2),
+            args = list(mean = mu2, sd = sigma2)) +
+  labs(x = "Sampling Distribution of Sample Proportion if Null is True", y = "") +
+  geom_vline(aes(xintercept = 0.5079)) +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = c(mu2 - 3 * sigma2, 
+                                mu2 - 2 * sigma2,
+                                mu2 - sigma2,
+                                mu2,
+                                mu2 + sigma2, 
+                                mu2 + 2 * sigma2,
+                                mu2 + 3 * sigma2)) +
+  theme_minimal() +
+  labs(caption = "Dark Area is Shaded")
+```
+
+
+g. 
+
+$Z = \frac{\hat{p} - p_0}{SE}$ = 0.125.
+
+```{r}
+mu2 <- 0; sigma2 <- 1; X <- 0.125
+
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dnorm,
+            args = list(mean = mu2, sd = sigma2), fill = "lightblue4",
+            xlim = c(mu2 - 3 * sigma2, -abs(X))) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey90",
+            xlim = c(-abs(X), abs(X)),
+            args = list(mean = mu2, sd = sigma2)) +
+  geom_area(stat = "function", fun = dnorm, fill = "lightblue4",
+            xlim = c(abs(X), mu2 + 3 * sigma2),
+            args = list(mean = mu2, sd = sigma2)) +
+  labs(x = "Z Distribution if Null is True", y = "") +
+  geom_vline(aes(xintercept = X)) +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = c(mu2 - 3 * sigma2, 
+                                mu2 - 2 * sigma2,
+                                mu2 - sigma2,
+                                mu2,
+                                mu2 + sigma2, 
+                                mu2 + 2 * sigma2,
+                                mu2 + 3 * sigma2)) +
+  theme_minimal() +
+  labs(caption = "Dark Area is Shaded")
+```
+
+h. approximately `r (pnorm(-0.125) * 2) |> round(4)`
+
+i. We estimate that the proportion of home teams who won in the NFL during the pandemic is 0.5079. There is __no__ evidence that the proportion of home team wins during a pandemic in the NFL is different than 0.5 (Z = 0.125, p-value = 0.9005).
+
+j. A type I error would mean that we conclude that there is evidence of a home field advantage (or disadvantage), when, in reality there is no home field advantage (or disadvantage).
+
+k. A type II error would mean that we conclude that there is no evidence for a home field advantage (or disadvantage), when, in reality there is a home field advantage (or disadvantage).
+
+l. No. 0.5 is in the interval so it is a "reasonable" or "plausible" value for the proportion of games the home team wins.
+
+<br>
+
+__Exercise 2__. 
+
+a. $H_0: p = \frac{1}{7}$
+
+$H_a: p \neq \frac{1}{7}$
+
+b. $n \cdot p_0 =  50 \cdot \frac{1}{7} = 7.14 < 10$
+
+$n \cdot (1 - p_0) =  50 \cdot (1 - \frac{1}{7}) = 42.86 > 10$
+
+so the condition does not hold and the sampling distribution of the sample proportion may not be approximately normally distributed. However, as prompted in the question, we will complete the rest of the test as if the sampling distribution is normally distributed.
+
+c. $\hat{p}$ = 0.2, $n = 50$, $SE = 0.0495$. 
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+mu2 <- (1 / 7) |> round(3); sigma2 <- 0.0495; X <- 0.2
+
+ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
+  geom_area(stat = "function", fun = dnorm,
+            args = list(mean = mu2, sd = sigma2), fill = "lightblue4",
+            xlim = c(mu2 - 3 * sigma2, 0.086)) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey90",
+            xlim = c(0.086, 0.2),
+            args = list(mean = mu2, sd = sigma2)) +
+  geom_area(stat = "function", fun = dnorm, fill = "lightblue4",
+            xlim = c(0.2, mu2 + 3 * sigma2),
+            args = list(mean = mu2, sd = sigma2)) +
+  labs(x = "Sampling Distribution of Sample Proportion if Null is True", y = "") +
+  geom_vline(aes(xintercept = 0.2)) +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = c(mu2 - 3 * sigma2, 
+                                mu2 - 2 * sigma2,
+                                mu2 - sigma2,
+                                mu2,
+                                mu2 + sigma2, 
+                                mu2 + 2 * sigma2,
+                                mu2 + 3 * sigma2)) +
+  theme_minimal() +
+  labs(caption = "Dark Area is Shaded")
+```
+
+d. $Z = -1.154$
+
+e. `r (pnorm(-1.154) * 2) |> round(4)`
+
+f. We estimate that the proportion of people who get the number question in the game correct is 0.2. There is no evidence that the proportion is different than $\frac{1}{7}$ (and therefore no evidence that people have psychic ability from this study). (Z = -1.154, p-value - 0.2485).
+
+g. A Type I error would mean that we conclude that people do have psychic ability but, in reality, people do not have psychic ability and are randomly guessing the number in the game.
+
+h. A Type I error is the referees concluding that the call on the field is incorrect, when, in fact, the call on the field was correct. A Type II Error is the referees not finding enough evidence to overturn the call on the field, when, in fact, the call on the field was not correct.
+
+
+<br>
+
