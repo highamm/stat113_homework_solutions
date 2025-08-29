@@ -209,7 +209,7 @@ __Exercise 4__.
 ```{r}
 library(tidyverse)
 library(pander)
-survey_df <- read_csv(here::here("data_private/stat113_survey.csv"))
+survey_df <- read_csv(here::here("data_private/stat113_survey_f25.csv"))
 new_df <- survey_df |>
   filter(Hand == "Right" | Hand == "Left") |>
   filter(Sport == "Yes" | Sport == "No")

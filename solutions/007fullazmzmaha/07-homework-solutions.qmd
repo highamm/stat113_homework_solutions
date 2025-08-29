@@ -261,7 +261,7 @@ __Conclude__: We are 90% confident that the average time to complete the test fo
 __Exercise 5__.
 
 ```{r}
-survey_df <- read_csv(here::here("data_private/stat113_survey.csv")) |>
+survey_df <- read_csv(here::here("data_private/stat113_survey_f25.csv")) |>
   filter(!is.na(Award) & !is.na(GPA))
 
 ggplot(data = survey_df, aes(x = Award, y = GPA)) +

@@ -15,7 +15,7 @@ __Exercise 1__.
 ```{r}
 library(tidyverse)
 library(here)
-stat113_df <- read_csv(here("data_private/stat113_survey.csv"))
+stat113_df <- read_csv(here("data_private/stat113_survey_f25.csv"))
 
 ggplot(data = stat113_df, aes(x = Exercise)) + 
   geom_histogram(colour = "darkorange4", fill = "darkorange1", bins = 15) +

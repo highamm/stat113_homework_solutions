@@ -14,7 +14,7 @@ __Exercise 1__.
 ```{r}
 library(tidyverse)
 library(here)
-survey_df <- read_csv(here("data_private/stat113_survey.csv"))
+survey_df <- read_csv(here("data_private/stat113_survey_f25.csv"))
 ggplot(data = survey_df, aes(x = GPA)) +
   geom_histogram(bins = 19, colour = "darkorchid4", fill = "darkorchid1") +
   theme_minimal()
