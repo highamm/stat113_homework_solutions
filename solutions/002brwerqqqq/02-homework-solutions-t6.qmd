@@ -17,12 +17,12 @@ library(here)
 stat113_df <- read_csv(here("data_private/stat113_survey_f25.csv"))
 
 ggplot(data = stat113_df, aes(x = Exercise)) + 
-  geom_histogram(colour = "darkorange4", fill = "darkorange1", bins = 15) +
+  geom_histogram(colour = "darkorange4", fill = "darkorange1", bins = 10) +
   theme_minimal() +
   labs(x = "Exercise (hours per week)")
 ```
 
-a. right-skewed.
+a. slightly right-skewed or approximately symmetric.
 
 <!-- (or approximately symmetric would also get credit). -->
 
@@ -39,7 +39,7 @@ d. approximately `r round(sd(stat113_df$Exercise, na.rm = TRUE), 2)` hours.
 
 e. We would expect the mean to be slightly larger than the median if we said the distribution in (a) was right-skewed.
 
-f. We would use the mean to describe the center and the standard deviation to describe the spread if we say there is no extreme skewness or outliers in the distribution of `Exercise`. (Or, we would use the median to describe the center and the IQR to describe the spread if we argue that the distribution is extremely skewed).
+f. We would use the mean to describe the center and the standard deviation to describe the spread if we say there is no extreme skewness or outliers in the distribution of `Exercise`. (Or, we would use the median to describe the center and the IQR to describe the spread if we argue that the distribution is extremely skewed. There is no extreme skewness in this distribution though).
 
 <br>
 
