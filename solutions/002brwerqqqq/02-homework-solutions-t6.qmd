@@ -161,7 +161,7 @@ a. Either (1) Yes, GPA and award do seem associated because the median gpas for 
 
 (2) No, GPA and award do not seem associated because the median gpas for students for each of the three award types are fairly similar and there is a lot of overlap in the distributions of gpa between the three groups.
 
-I would lean very slightly toward (1) for this example but either would receive full credit.
+I would lean toward (2) for this example.
 
 b. Plot that shows __more__ association:
 
@@ -179,7 +179,7 @@ ggplot(data = gpa_fake_association,
   theme_minimal()
 ```
 
-Plot that shows __less__ association:
+Plot that shows (maybe slightly?) __less__ association:
 
 ```{r}
 ggplot(data = gpa_fake_association,
