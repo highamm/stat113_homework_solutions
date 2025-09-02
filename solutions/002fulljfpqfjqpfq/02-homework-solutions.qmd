@@ -18,7 +18,7 @@ library(here)
 stat113_df <- read_csv(here("data_private/stat113_survey_f25.csv"))
 
 ggplot(data = stat113_df, aes(x = Exercise)) + 
-  geom_histogram(colour = "darkorange4", fill = "darkorange1", bins = 15) +
+  geom_histogram(colour = "darkorange4", fill = "darkorange1", bins = 10) +
   theme_minimal() +
   labs(x = "Exercise (hours per week)")
 ```
@@ -354,9 +354,7 @@ ggplot(data = stat113_nomiss, aes(x = Sport, fill = Award)) +
   labs(y = "proportion")
 ```
 
-d. Yes, it looks like the variables are associated because the proportion of students who play a sport that responded they would prefer the Olympic medal is much higher than the proportion of students who do not play a sport that responded they would prefer the Olympic medal. We can see this in the bar plot because the distribution of `No` sport students is substantially different than the distirbution of `Yes` sport students.
-
-e. Can make either argument for this question but I would argue "Yes", you can make this extension because the relationship between whether or not a student plays a sport and their award preference is probably similar for students who choose not to take STAT 113. So, though we have a convenience sample, the association we are attempting to measure should be similar for students not taking STAT 113.
+d. Yes, it looks like the variables are associated because the proportion of students who play a sport that responded they would prefer the Olympic medal is much higher than the proportion of students who do not play a sport that responded they would prefer the Olympic medal. We can see this in the bar plot because the distribution of `No` sport students is substantially different than the distirbution of `Yes` sport students
 
 <br>
 
