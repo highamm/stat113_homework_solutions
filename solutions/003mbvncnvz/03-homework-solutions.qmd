@@ -40,8 +40,6 @@ d. `r 2.5 - (summary_tab$mean |> round(2))` points.
 
 e. `r 3.75 - (summary_tab$mean |> round(2))` points.
 
-f. Our sample consists mostly of first and second year students. So, if GPA for juniors and seniors is systematically different for first and second year students, then our convenience sample is not representative of all SLU students.
-
 <br>
 
 __Exercise 2__.
