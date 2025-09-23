@@ -430,19 +430,19 @@ __normality__: Though the histogram of the residuals is a little left-skewed, ou
 
 __Exercise 7__. Use the following choices to determine which procedure and graph you would use to answer a few questions of interest.
 
-1. Confidence interval or hypothesis test for a proportion (bar plot)
+1. Confidence interval or hypothesis test for a proportion (bar plot).
     
-2. Chi-square goodness of fit test (bar plot)
+2. Chi-square goodness of fit test (bar plot).
     
-3. Chi-square test of association (stacked bar plot)
+3. Chi-square test of association (stacked bar plot).
 
 4. Confidence interval or hypothesis test for a mean (histogram or boxplot) or for a difference in means from paired data (histogram or line plot).
 
-5. Confidence interval or hypothesis test for a slope in a regression model with a quantitative predictor (scatterplot) 
+5. Confidence interval or hypothesis test for a slope in a regression model (scatterplot).
 
-6. Confidence interval or hypothesis test for a difference in means in a regression model with a categorical predictor with two levels (side-by-side boxplots)
+6. Confidence interval or hypothesis test for a difference in means in a regression model (side-by-side boxplots).
 
-7. ANOVA hypothesis test for association for a categorical predictor with more than two levels and a quantitative response (side-by-side boxplots)
+7. ANOVA hypothesis test (side-by-side boxplots).
 
 Recall some of the variables collected in the STAT 113 survey data. Variables include: `GPA`, `Exercise` (hours per week), `Award` (olympic, nobel, or academy), `Class` year (First-year, Sophomore, Junior, or Senior), `Travel` (number of hours to get to SLU), `Height` (in inches), `Computer` (Mac or PC), `Twitter` (has twitter or does not), and `Pulse` (beats per minute).
 
@@ -450,9 +450,9 @@ Which procedure would you use to answer the following questions?
 
 a. Chi-squared Test of Association.
 
-b. ANOVA hypothesis test for association for a categorical predictor with more than two levels and a quantitative response.
+b. ANOVA hypothesis test.
 
-c. Confidence interval or hypothesis test for a slope in a regression model with a quantitative predictor.
+c. Confidence interval or hypothesis test for a slope.
 
 d. Confidence interval or hypothesis test for a mean.
 
@@ -460,7 +460,7 @@ e. Confidence interval or hypothesis test for a proportion.
 
 f. Chi-squared goodness of fit test.
 
-g. Confidence interval or hypothesis test for a slope in a regression model with a quantitative predictor.
+g. Confidence interval or hypothesis test for a slope.
 
 <br>
 
