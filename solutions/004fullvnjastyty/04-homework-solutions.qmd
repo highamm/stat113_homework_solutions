@@ -198,13 +198,7 @@ b. Answers will vary but one possible confounding variable is the amount of sunl
 
 <br>
 
-__Exercise 8__.
-
-Answers will vary. If you have any questions about the article, please ask!
-
-<br>
-
-__Exercise 9__. 
+__Exercise 8__. 
 
 ```{r}
 library(tidyverse)
@@ -227,7 +221,7 @@ d. Can make this argument either way. I would argue it probably is representativ
 
 <br>
 
-__Exercise 10__. 
+__Exercise 9__. 
 
 a. Sampling variability means that, for different samples of 20 trees, the proportion that are taller than 40 feet will change from one sample of 20 trees to another sample of 20 trees to another sample, etc.
 
@@ -260,7 +254,7 @@ i. Because we already have a census and know the true proportion of trees taller
 
 <br>
 
-__Exercise 11__. Suppose that you are interested in estimating the proportion of toddlers in the U.S. who are allergic to peanuts. You randomly select 150 toddlers and record whether each one has a peanut allergy. Assume that your sample is representative of all toddlers in the U.S.
+__Exercise 10__. Suppose that you are interested in estimating the proportion of toddlers in the U.S. who are allergic to peanuts. You randomly select 150 toddlers and record whether each one has a peanut allergy. Assume that your sample is representative of all toddlers in the U.S.
 
 You find in your sample that 20 out of the 150 toddlers have a peanut allergy.
 
@@ -289,7 +283,7 @@ f.
 
 <br>
 
-__Exercise 12__. 
+__Exercise 11__. 
 
 a. approximately $0.0283$.
 
@@ -312,7 +306,7 @@ survey_sum <- survey_hand |>
                           total = n())
 ```
 
-__Exercise 13__. Suppose we are interested in the proportion of students that are right-handed at SLU. We take a convenience sample of STAT 113 students, finding that, of the `r survey_sum$total` surveyed, `r survey_sum$totalright` are right-handed.
+__Exercise 12__. Suppose we are interested in the proportion of students that are right-handed at SLU. We take a convenience sample of STAT 113 students, finding that, of the `r survey_sum$total` surveyed, `r survey_sum$totalright` are right-handed.
 
 a. $\hat{p} =$ `r (survey_sum$totalright / survey_sum$total) |> round(3)`.
 
