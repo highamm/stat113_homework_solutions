@@ -233,24 +233,28 @@ c. Approximately $0.2913$ for the mean and approximately $0.1026$ for the standa
 se <- sqrt(0.29 * (1 - 0.29) / 20)
 ```
 
-d. `r se |> round(4)`. The calculation is close to what is given on the app.
+d. The sampling distribution should be centered at $p = 0.29$. The center approximation in the app using just 4000 samples should be close to this value.
 
-e. 
+e. Your calculation should come out to be exactly: SE = `r se |> round(4)`. The calculation should be close close to what is given on the app.
+
+f. 
 
 No, according to our success-failure condition, the sampling distribution will be normally distributed if both $n \cdot p$ and $n \cdot (1 - p)$ are larger than 10. In this case, $n \cdot p$ is ``r 0.29 * 20` so the condition does not hold.
 
-f. The spread will be smaller. The more trees there are in repeated samples, the less variability the sample proportions will have. This can also be seen in the formula for the standard deviation of the sampling distribution, which has an $n$ in the denomenator (so a larger $n$ results in a smaller spread).
+g. The spread will be smaller. The more trees there are in repeated samples, the less variability the sample proportions will have. This can also be seen in the formula for the standard deviation of the sampling distribution, which has an $n$ in the denominator (so a larger $n$ results in a smaller spread).
+
+The center should be the same. It would still be centered at $p = 0.29$.
 
 ```{r}
 ci <- (0.3 + c(-1, 1) * 1.96 * sqrt(0.29 * (1 - 0.29) / 50)) |>
   round(4)
 ```
 
-g. (`r ci[1]`, `r ci[2]`).
+h. (`r ci[1]`, `r ci[2]`).
 
-h. We are 95% confident that the proportion of trees in St. Lawrence County that are taller than 40 feet is between `r ci[1]` and `r ci[2]`.
+i. We are 95% confident that the proportion of trees in St. Lawrence County that are taller than 40 feet is between `r ci[1]` and `r ci[2]`.
 
-i. Because we already have a census and know the true proportion of trees taller than 40 feet exactly ($p = 0.29$)>. Therefore, we don't need an interval for it.
+j. Because we already have a census and know the true proportion of trees taller than 40 feet exactly ($p = 0.29$)>. Therefore, we don't need an interval for it.
 
 <br>
 
@@ -285,13 +289,15 @@ f.
 
 __Exercise 11__. 
 
-a. approximately $0.0283$.
+a. The mean should be somewhere between $0.115$ and $0.125$. The Standard Error should be around $0.027$, $0.028$, or $0.029$.
 
-b. `r sqrt(0.12 * (1 - 0.12) / 130) |> round(4)` is approximately equal to the standard deviation found with the app.
+b. $p = 0.12$ is the "true center" of the sampling distribution.
 
-c. approximately $0.056$.
+c. Your calculation should come out to be: SE = `r sqrt(0.12 * (1 - 0.12) / 130) |> round(4)`. This should be approximately equal to the standard deviation found with the app.
 
-d. `r (1.96 * sqrt(0.12 * (1 - 0.12) / 130)) |> round(4)` is approximately equal to the Margin of Error found with the app.
+d. approximately $0.05$ or $0.06$.
+
+e. Your calculation should come out to be: MoE = `r (1.96 * sqrt(0.12 * (1 - 0.12) / 130)) |> round(4)`. This is approximately equal to the Margin of Error found with the app.
 
 <br>
 
