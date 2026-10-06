@@ -200,13 +200,7 @@ b. Answers will vary but one possible confounding variable is the amount of sunl
 
 <br>
 
-__Exercise 8__.
-
-Answers will vary. If you have any questions about the article, please ask!
-
-<br>
-
-__Exercise 9__. 
+__Exercise 8__. 
 
 ```{r}
 library(tidyverse)
@@ -229,13 +223,13 @@ d. Can make this argument either way. I would argue it probably is representativ
 
 <br>
 
-__Exercise 10__.
+__Exercise 9__.
 
 a. Sampling variability means that, for different samples of 20 trees, the proportion that are taller than 40 feet will change from one sample of 20 trees to another sample of 20 trees to another sample, etc.
 
 <br>
 
-__Exercise 11__.
+__Exercise 10__.
 
 a. Sampling variability means that, different samples of 150 toddlers can yield different sample proportions that have a peanut allergy.
 
