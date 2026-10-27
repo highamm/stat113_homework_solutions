@@ -145,11 +145,11 @@ ggplot(data = NULL, aes(c(mu2 - 3 * sigma2, mu2 + 3 * sigma2))) +
   labs(caption = "Dark Area is Shaded")
 ```
 
-d. $Z = -1.154$
+d. $Z = 1.154$
 
 e. `r (pnorm(-1.154) * 2) |> round(4)`
 
-f. We estimate that the proportion of people who get the number question in the game correct is 0.2. There is no evidence that the proportion is different than $\frac{1}{7}$ (and therefore no evidence that people have psychic ability from this study). (Z = -1.154, p-value - 0.2485).
+f. We estimate that the proportion of people who get the number question in the game correct is 0.2. There is no evidence that the proportion is different than $\frac{1}{7}$ (and therefore no evidence that people have psychic ability from this study). (Z = 1.154, p-value = 0.2485).
 
 g. A Type I error would mean that we conclude that people do have psychic ability but, in reality, people do not have psychic ability and are randomly guessing the number in the game.
 
