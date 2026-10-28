@@ -174,7 +174,7 @@ counts <- c(113, 157, 130)
 ## chisq.test(counts, correct = FALSE)
 ```
 
-e. $X^2 = 7.385$.
+e. Contribution of Bulbasaur: $3.0999$. $X^2 = 7.385$.
 
 f. 
 
@@ -234,9 +234,15 @@ test_output <- chisq.test(new_df$Hand, new_df$Sport, correct = FALSE)
 pander::pander(test_output$expected)
 ```
 
-If all of these counts are larger than, the assumption is satisfied. If any of them are less than 5, the assumption is not satisfied.
+If all of these expected counts are larger than, the assumption is satisfied. If any of them are less than 5, the assumption is not satisfied.
 
-c. $X^2$ = `r test_output$statistic |> round(3)`
+```{r}
+cont_ly <- ((test_output$observed[1, 2] - test_output$expected[1, 2]) ^ 2) /
+  test_output$expected[1, 2] 
+
+```
+
+c. Contribution of left-handed yes-sport: `r cont_ly |> round(3)`.  $X^2$ = `r test_output$statistic |> round(3)`
 
 d. $df = 1$
 
@@ -302,7 +308,12 @@ c. The following is a table of expected counts with __Player__ on the row and wh
 chisq_test_out$expected |> pander::pander()
 ```
 
-d. The table is given in the previous part.
+```{r}
+cont_dw <- ((chisq_test_out$observed[4, 1] - chisq_test_out$expected[4, 1]) ^ 2) /
+  chisq_test_out$expected[4, 1]
+```
+
+d. The table is given in the previous part. The contribution should be: `r cont_dw |> round(2)`.
 
 e. $df = 3$
 
@@ -331,4 +342,4 @@ i. We are seeing moderate evidence for the association because some of the obser
 
 <br>
 
-__Exercise 6__. Solutions to the exam corrections assignment will vary.
+__Exercise 6__. Solutions will vary depending on what is chosen.
