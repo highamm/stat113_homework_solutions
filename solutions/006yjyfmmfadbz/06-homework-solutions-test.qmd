@@ -1,0 +1,165 @@
+---
+title: "Section 6 Homework Solutions"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+<!-- I lost the .qmd file for this so I had to ask Claude to re-render based on the rendered .html file. need to correct SOME THINGS-->
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(openintro)
+library(knitr)
+```
+
+**Exercise 1**. Data was collected on home sales in Pierce county in Washington state. The data set was obtained from the OpenIntro textbook site at <https://www.openintro.org/data/index.php?data=pierce_county_house_sales>. Included among the variables measured on the 16814 homes are:
+
+-   `sale_price`, in dollars
+
+We want to determine if there is evidence that the average home price in Pierce county is different than 350,000 dollars, which corresponds to the (approximate) average home price in the United States. We also want a confidence interval for the average home price in Pierce county. Below is a histogram of `sale_price`, along with a table of summary statistics.
+
+```{r}
+#| label: ex1-hist
+#| fig-height: 4
+# NOTE: bins = 15 is a guess based on the rendered histogram
+ggplot(pierce_county_house_sales, aes(x = sale_price)) +
+  geom_histogram(bins = 15, fill = "white", color = "black") +
+  theme_minimal()
+```
+
+```{r}
+#| label: ex1-summary
+pierce_county_house_sales |>
+  summarize(
+    mu_hat = round(mean(sale_price)),
+    s = round(sd(sale_price)),
+    n = n()
+  ) |>
+  kable(col.names = c("$\\hat{\\mu}$", "s", "n"), align = "c")
+```
+
+a.  $H_0: \mu = 350000$
+
+$H_a: \mu \neq 350000$
+
+$\mu$ is the true mean house price of all houses in the county.
+
+b.  $\hat{Y} = 461233$, where $\hat{Y}$ is predicted sale price for homes in Pierce county.
+
+c.  Though the sample size is large, there are a few extreme outliers so it is possible that the sampling distribution of the sample mean will not be approximately normally distributred.
+
+d.  $df = 16813$
+
+$461233 \pm 2.576 \cdot \frac{236083}{\sqrt{(16814)}}$
+
+$(456542.8, 465923.2)$ dollars.
+
+e.  $df = 16813$
+
+$T = \frac{461233 - 350000}{236083 / \sqrt{(16814)}}$ = 61.09.
+
+In the T-distribution graph (if the null hypothesis is true), 61.09 is so far off in the tail that the graph is hard to construct with a computer. But, your graph should be centered at 0 and the area above $61.09$ and the area below $-61.09$ should be shaded.
+
+f.  p-value $< 0.0001$ or p-value close to 0.
+
+g.  We are 99% confident that the mean price of all homes in Pierce county is between 456542.8 and 465923.2 dollars.
+
+h.  We estimate the average price of homes in Pierce county is 461233 dollars. There is **strong** evidence that the mean price of houses in Pierce county is different than the national average of 350000 dollars ($T = 61.09$, p-value $< 0.0001$).
+
+\
+
+**Exercise 2**.
+
+```{r}
+#| label: ex2-head
+textbooks |>
+  select(dept_abbr, course, isbn, ucla_new, amaz_new) |>
+  head(3) |>
+  kable(align = "c")
+```
+
+```{r}
+#| label: ex2-hist
+# NOTE: bins = 15 is a guess based on the rendered histogram
+textbooks <- textbooks |>
+  mutate(diff = ucla_new - amaz_new)
+
+ggplot(textbooks, aes(x = diff)) +
+  geom_histogram(bins = 15, fill = "lightblue", color = "darkblue") +
+  labs(title = "Histogram of Differences",
+       x = "Difference in Price (UCLA minus Amazon)") +
+  theme_minimal()
+```
+
+```{r}
+#| label: ex2-summary
+textbooks |>
+  summarize(
+    mean_diff = round(mean(diff), 2),
+    sd_diff = round(sd(diff), 2),
+    n_diff = n()
+  ) |>
+  kable(align = "c")
+```
+
+a.  **Review**. This data is paired because we have the price of each textbook from both of the two stores (UCLA and Amazon). This would be unpaired if we took a random sample of 50 books from the UCLA store and a different random sample of 50 books from Amazon.
+
+b.  **Prepare**. Write the population/unknown model for the difference in textbook prices.
+
+$$
+Y_{diff} = \mu_{diff} + \epsilon,
+$$
+
+where $Y_{diff}$ is the difference in textbook price (UCLA minus Amazon) and $\mu_{diff}$ is the true mean difference in textbook price (UCLA minus Amazon).
+
+c.  **Prepare**.
+
+$H_0: \mu_{diff} = 0$
+
+$H_a: \mu_{diff} \neq 0$,
+
+where $\mu_{diff}$ is the true mean difference in textbook price (UCLA minus Amazon).
+
+d.  **Check**. Either answer would get credit here with appropriate reasoning. Can either say (1) the assumption holds because we have a fairly large sample size ($n = 73$) and the right-skewness is not that extreme OR (2) the assumption does not hold because, though we have a large sample size ($n = 73$), there is extreme right-skewness and/or an extreme outlier.
+
+I would lean toward (1) personally, but again, for assessment, either answer would receive full credit here.
+
+d.  **Calculate**. Calculate a 90% confidence interval for the average difference in textbook price. State the degrees of freedom for the $t^*$ value that you found with StatKey.
+
+degrees of freedom: df = 73 - 1 = 72.
+
+$t^* = 1.67$
+
+Confidence Interval: $12.76 \pm 1.67 \frac{14.26}{\sqrt{73}}$ = $(9.97, 15.55)$ dollars.
+
+e.  Calculate the test statistic, $T$, for the hypothesis test for this example. State the degrees of freedom. Then, draw a graph of the t-distribution assuming the null hypothesis is true, mark where your observed $T$ falls on the distribution, and shade the area that represents the p-value.
+
+$$
+T = \frac{12.76 - 0}{14.26 / \sqrt{73}} = 7.645
+$$
+
+```{r}
+#| label: ex2-tplot
+ggplot() +
+  xlim(-8, 8) +
+  stat_function(fun = dt, args = list(df = 72)) +
+  geom_vline(xintercept = -7.645, color = "black") +
+  geom_vline(xintercept = 7.645, color = "red") +
+  labs(x = "T", y = "density") +
+  theme_minimal()
+```
+
+Though you cannot see the shading easily in the plot, the area under the curve to the right of the red line is shaded and the area to the left of the black line is also shaded.
+
+f.  p-value close to 0 or p-value $< 0.001$.
+
+g.  We are 90% confident that the true mean textbook price is between 9.97 dollars and 15.547 dollars higher at the UCLA bookstore than on Amazon.
+
+h.  We estimate that the average cost of a textbook at the UCLA bookstore is 12.76 dollars more than the cost at Amazon. There is strong evidence that the mean difference in textbook price is different than 0 dollars (T = 7.645, p-value $< 0.0001$).
+

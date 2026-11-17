@@ -196,7 +196,14 @@ stroop_aug <- broom::tidy(stroop_mod)
 
 a. $\hat{Y}$ = `r stroop_aug |> slice(1) |> pull(estimate) |> round(3)` + `r stroop_aug |> slice(2) |> pull(estimate) |> round(3)` $test_{ind}$,
 
-where $\hat{Y}$ is the predicted time to complete the test.
+where $\hat{Y}$ is the predicted time to complete the test and
+
+$$
+test_{ind} = \begin{cases}
+0, \text{control group}, \\
+1, \text{stroop group}
+\end{cases}
+$$
 
 b. 
 
