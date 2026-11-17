@@ -221,7 +221,7 @@ __Calculate__:
 
 $T$ = `r stroop_aug |> slice(2) |> pull(statistic) |> round(3)`
 
-p-value = 0.000055
+p-value = `r stroop_aug |> slice(2) |> pull(p.value) |> round(4)`
 
 ```{r}
 test_output <- stroop_aug |> slice(2) 
@@ -236,7 +236,7 @@ if (test_output$p.value > 0.1) {
 }
 ```
 
-__Conclude__: There is `r adj` evidence for an association between the test taken and the time taken to complete the test (or, there is `r adj` evidence that the mean time for the control test group is different than the mean time for the stroop test group). ($T$ = `r stroop_aug |> slice(2) |> pull(statistic) |> round(3)`, p-value = 0.000055)
+__Conclude__: There is `r adj` evidence for an association between the test taken and the time taken to complete the test (or, there is `r adj` evidence that the mean time for the control test group is different than the mean time for the stroop test group). ($T$ = `r stroop_aug |> slice(2) |> pull(statistic) |> round(3)`, p-value = `r stroop_aug |> slice(2) |> pull(p.value) |> round(4)`)
 
 c. Find a 90% confidence interval for the slope parameter, which represents a difference in means for this example.
 
